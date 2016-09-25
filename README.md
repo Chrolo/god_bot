@@ -34,5 +34,7 @@ Please file an issue on github. If I don't respond within 3 days, highlight me o
  - General use
   - [ ] Create a way to initialise the database
 	 - I've actually got one I wrote in php for this project, but I don't know if it's "production ready"
+  - [ ] Track username changes in the channel.
+  - [ ] Identify users to correctly set permission levels
  - Misc
 	- [ ] Unit tests...

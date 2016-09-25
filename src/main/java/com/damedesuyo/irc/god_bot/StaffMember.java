@@ -131,8 +131,7 @@ public class StaffMember {
 	 */
 	public static String deHighlightUsername(String userName)
 	{
-		//inserts a zero-width space character after the first character of the name
-		
+		//inserts a zero-width space character after the first character of the name	
 		return userName.substring(0, 1)+"​"+ userName.substring(1);
 	}
 	

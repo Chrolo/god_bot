@@ -22,6 +22,9 @@ import org.pircbotx.PircBotX;
 import org.pircbotx.hooks.ListenerAdapter;
 import org.pircbotx.hooks.events.*;
 
+import com.damedesuyo.irc.god_bot.commands.BotCommand;
+import com.damedesuyo.irc.god_bot.commands.BotCommandNotFound;
+import com.damedesuyo.irc.god_bot.commands.BotCommands;
 import com.damedesuyo.irc.god_bot.commands.BotCommands_ModifyStaff;
 import com.damedesuyo.irc.god_bot.database_def.DatabaseDefinition;
 import com.google.common.collect.ImmutableSortedSet;
@@ -31,7 +34,7 @@ public class App  extends ListenerAdapter
 {
 	//App Settings:
 	private static String botCommandIdentifier;
-
+	static BotCommands botCommands;
 	//Static Class instances:
 	static PircBotX bot;
 	
@@ -43,66 +46,40 @@ public class App  extends ListenerAdapter
 			System.out.println("Command Seen: '"+event.getMessage()+"'");
 			String modMessage = event.getMessage().substring(botCommandIdentifier.length(),event.getMessage().length());
 			System.out.println("ModMessage: "+modMessage);
-			//event.respondChannel("Hello world!");
+			String command_args[] = modMessage.split(" ");
+			String command = command_args[0];
+			System.out.println("Command seen was:\t"+command);
 			
-			//Now look through APIs to respond:
+			//check new Commands API
+			if(botCommands.getSetOfCommands().contains(command))
+			{
+				System.out.println("The Command '"+command+"' exists in the new API");
+				try 
+				{
+					BotCommand commandInst = botCommands.getCommandClassInstance(command);
+					//Get arg string:
+					String argString = modMessage.substring(command.length(),modMessage.length()).trim();	
+					commandInst.execute(event, argString);
+				} 
+				catch (BotCommandNotFound e)
+				{
+					e.printStackTrace();
+				}
+				catch(Exception e)
+				{
+					System.out.println("Command '"+command+"' failed with uncaught exception:");
+					e.printStackTrace();
+				}
+				return; //don't bother with the rest.
+			}
+			
+			//Now look through Old APIs to respond:
 			if (modMessage.startsWith("hello"))
 			{
 				System.out.println("Saw a hello message");
 				String user_d = StaffMember.deHighlightUsername(event.getUser().getNick());
 				
 				event.respondChannel("Hello "+user_d +"!");
-			}
-			//-------------------------------------------------------------------------
-			else if(modMessage.startsWith("timefor"))
-			{	//Asking what the timezone for staff member is:
-				String args[] = modMessage.split(" ");
-				
-				//Create user class:
-				StaffMember user = UserDatabase.getSharedInstance().getStaffMember((String)args[1]);
-				//user.printStaffDataToConsole();
-				
-				if(user == null)
-				{
-					event.respondChannel("I don't have '"+StaffMember.deHighlightUsername((String)args[1])+"' listed in my database.");
-				}
-				else
-				{
-					String userTime = user.getStaffLocalTimeAsStringWithFormat("HH:mm:ss");
-					if(userTime != null)
-						event.respondChannel(StaffMember.deHighlightUsername(user.username)+"'s current time is: "+user.getStaffLocalTimeAsStringWithFormat("HH:mm:ss"));
-					else
-						event.respondChannel(StaffMember.deHighlightUsername(user.username)+" hasn't told me their timezone.");
-				}
-				
-			}
-			//-------------------------------------------------------------------------
-			else if(modMessage.startsWith("setMyTimezone"))
-			{
-				//TODO : [Security] Make sure only identified users can set their timezones
-				String args[] = modMessage.split(" ");
-				String newtimeZone = args[1];
-				//check if timezone given is valid:
-				if(!StaffMember.validateTimezone(newtimeZone))
-					event.respondChannel("Sorry, '"+newtimeZone+"' isn't a valid timeZone. Needs to be something like <Continent>/<Town> as seen here: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones");
-				else
-				{
-					StaffMember user = UserDatabase.getSharedInstance().getStaffMember(event.getUser().getNick());
-					if(user != null)
-					{
-						try {
-							user.setTimezone(newtimeZone);
-						} catch (Exception e) {
-							event.respondChannel("Sorry, '"+newtimeZone+"' isn't a valid timeZone. Needs to be something like <Continent>/<Town> as seen here: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones");
-						}
-						event.respondChannel("So you're in "+newtimeZone+", eh?. I'll remember that!");
-					}
-					else
-					{
-						event.respondChannel("I don't have '"+StaffMember.deHighlightUsername(event.getUser().getNick())+"' listed in my database.");
-					}
-				}
-				
 			}
 			//------------------------------------------------------------------------
 			else if(modMessage.startsWith("AddStaff"))
@@ -148,6 +125,9 @@ public class App  extends ListenerAdapter
 		//--Sys Init --//
 		Wini ini = new Wini(new File("config/settings.ini"));
 		
+		botCommands = new BotCommands();
+		botCommandIdentifier = ini.get("bot","botCommandIdentifier",String.class);
+		
 		//Print Banner?
 		String bannerPath = ini.get("appSettings","banner",String.class);
 		if(bannerPath != null)
@@ -192,32 +172,13 @@ public class App  extends ListenerAdapter
 		
 		//*/
 		
-		//Test the GSON library:
 		Gson gson = new Gson();
-		//Create a database table definition:
-		/*
-		ArrayList<MySqlColumn> columns = new ArrayList<MySqlColumn>();
-		columns.add(new MySqlColumn());
-		columns.add(new MySqlColumn());
-		DatabaseTableDefinition dbTableDef = new DatabaseTableDefinition("TableName", columns);
-		
-		//Print JSON:
-		System.out.println("JSON of Table: "+gson.toJson(dbTableDef));
-		*/
-		/*
-		Map<String, Object> test = new HashMap<String, Object>();
-		test = gson.fromJson("{'staff':{'id':{'name':'field', 'type':'int(11)'}, 'nickName':{'type':'string'} }, 'staffAl':{'num':5} }", test.getClass());
-		System.out.println("Test became:"+test);
-		System.out.println("test[staff] is:"+test.get("staff"));
-		//System.out.println("test[staff][type] is:"+test.get("staff").type);
-		*/
-		
 		//Read JSON from file:
 		DatabaseDefinition dbDef = new DatabaseDefinition();
 		Reader dbDefFile = new FileReader("config/databaseDefinitions.json");
 		dbDef = gson.fromJson(dbDefFile, dbDef.getClass());
-		System.out.println("After Reading JSON, dbTableDef is: "+dbDef);
-		System.out.println("After Reading JSON, dbTableDef.tables[staff] is: "+dbDef.tables.get("staff"));
+//		System.out.println("After Reading JSON, dbTableDef is: "+dbDef);
+//		System.out.println("After Reading JSON, dbTableDef.tables[staff] is: "+dbDef.tables.get("staff"));
 		
 		//Configure what we want our bot to do
 		Configuration configuration = new Configuration.Builder()
@@ -227,11 +188,7 @@ public class App  extends ListenerAdapter
 				.addListener(new App())
 				.buildConfiguration();
 
-		/*
-		botCommandIdentifier = "++";
-		/*/
-		botCommandIdentifier = ini.get("bot","botCommandIdentifier",String.class);
-		//*/
+
 
 		//--------------------------------------------------------
 		//Running stuff:
