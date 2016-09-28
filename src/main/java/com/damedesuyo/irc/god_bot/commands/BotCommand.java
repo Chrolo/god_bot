@@ -27,7 +27,7 @@ public interface BotCommand {
 	/**
 	 * 
 	 * @param event The PircBot Message event related to the command call
-	 * @param args The string of args following the command call.
+	 * @param argString The string of args following the command call.
 	 */
 	void execute(MessageEvent event, String argString);
 }

@@ -9,7 +9,12 @@ import org.pircbotx.hooks.events.MessageEvent;
 import com.damedesuyo.irc.god_bot.Privilege;
 import com.damedesuyo.irc.god_bot.StaffMember;
 import com.damedesuyo.irc.god_bot.UserDatabase;
-
+/**
+ * Adds a new Staff member to the database.
+ * Currently this will only add a username. Expansions will be made to allow more complete userinfo to be added in one command.
+ * @author Chrolo
+ *
+ */
 public class AddUser implements BotCommand{
 
 	@Override
@@ -20,8 +25,7 @@ public class AddUser implements BotCommand{
 
 	@Override
 	public String getShortHelp() {
-		// TODO Auto-generated method stub
-		return null;
+		return "<command> <username to add>";
 	}
 
 	@Override
@@ -40,14 +44,31 @@ public class AddUser implements BotCommand{
 			String args[] = argString.split(" ");
 			
 			//Validate and Add the user data:
-			//TODO: Validate the data:
+			if(argString.length()==0 || args[0].length()==0)
+			{
+				event.respondChannel(getShortHelp());
+				return;
+			}
+			
+			if(userDatabase.isExistingUser(args[0]))
+			{	
+				event.respondChannel("I've already got "+args[0]+" listed." );
+				return;
+			}
+
+			
 			info.put("userName", args[0]);
 			
 			
 			try {
-				if(userDatabase.addStaffToDatabase(args[0]))
+				int res = userDatabase.addStaffToDatabase(args[0]);
+				if(res==0)
 				{
 					event.respondChannel("I've added "+args[0]+" to the staff. Welcome "+args[0]+"!" );
+				}
+				else if(res == -2)
+				{
+					event.respondChannel("I've already got "+args[0]+" listed." );
 				}
 				else
 				{

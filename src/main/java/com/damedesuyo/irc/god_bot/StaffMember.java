@@ -9,7 +9,7 @@ import java.util.TimeZone;
 public class StaffMember {
 
 	//Database Tag:
-	private int databaseID;
+	public int databaseID;
 	
 	//IRC identifiers:
 	public String username;

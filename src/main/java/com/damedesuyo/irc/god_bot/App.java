@@ -25,7 +25,6 @@ import org.pircbotx.hooks.events.*;
 import com.damedesuyo.irc.god_bot.commands.BotCommand;
 import com.damedesuyo.irc.god_bot.commands.BotCommandNotFound;
 import com.damedesuyo.irc.god_bot.commands.BotCommands;
-import com.damedesuyo.irc.god_bot.commands.BotCommands_ModifyStaff;
 import com.damedesuyo.irc.god_bot.database_def.DatabaseDefinition;
 import com.google.common.collect.ImmutableSortedSet;
 import com.google.gson.Gson;
@@ -80,11 +79,6 @@ public class App  extends ListenerAdapter
 				String user_d = StaffMember.deHighlightUsername(event.getUser().getNick());
 				
 				event.respondChannel("Hello "+user_d +"!");
-			}
-			//------------------------------------------------------------------------
-			else if(modMessage.startsWith("AddStaff"))
-			{
-				BotCommands_ModifyStaff.AddStaff(event, modMessage);
 			}
 			//------------------------------------------------------------------------
 			else if(modMessage.startsWith("ShutDown"))

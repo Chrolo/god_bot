@@ -25,7 +25,7 @@ public class EchoUserFacts implements BotCommand {
 		String infoFound = userInfoToString(event.getUser());
 		
 		//Output to local console:
-		System.out.println("User info:\n"+infoFound.replace("5","").replaceAll("1", ""));
+		System.out.println("User info:\n"+infoFound.replace("5","").replace("1", ""));
 		
 		//Output to channel:
 		//event.respondChannel("What I know about you is :\n"+infoFound);
@@ -42,11 +42,11 @@ public class EchoUserFacts implements BotCommand {
 	{
 		HashMap<String,String> userInfo = new HashMap<String,String>();
 		userInfo.put("Nick", user.getNick());
-		userInfo.put("Ident", user.getIdent());
+		userInfo.put("Ident/Login ", user.getIdent());
 		userInfo.put("Real Name", user.getRealName());
 //		userInfo.put("user to string", user.toString());
 		userInfo.put("Has Identified?", String.valueOf(user.isVerified()));
-		userInfo.put("Login", user.getLogin());
+//		userInfo.put("Login", user.getLogin()); //getIdent() is an alias of getLogin()
 		userInfo.put("Hostmask", user.getHostmask());
 		System.out.println("[userInfo] user:"+user.toString());
 		

@@ -40,8 +40,6 @@ public class UserDatabase
 	private static class SingletonHelper
 	{
 		private static final UserDatabase INSTANCE = new UserDatabase();
-
-		
 	}
 
 	/**
@@ -113,9 +111,8 @@ public class UserDatabase
 	
 	
 	//--------------------------------------------------------------------------------
-	//Public
+	// User Queries
 	
-	//	--Username validity
 	/**
 	 * @return ArrayList&lt;String&gt; containing each valid username/alias currently listed on database 
 	 */
@@ -130,7 +127,7 @@ public class UserDatabase
 		}
 		catch (SQLException e) 
 		{
-			System.out.println("[UserDatabase.java:getValidUsers]"+e.getMessage());
+			System.err.println("[UserDatabase.java:getValidUsers]"+e.getMessage());
 		}
 		
 		//System.out.println(result);
@@ -152,41 +149,9 @@ public class UserDatabase
 	{
 		return this.getValidUsers().contains(user);
 	}
-	
-	//-----------------------------------------------------------
-	//Add new user to database:
-	// This will be a series of different constructors: you could send just a user name, or a whole user's detailss
-	public boolean addStaffToDatabase(Map<String, Object> userData) throws SQLException
-	{
-		//TODO: validate the userData before adding to DB.
-		//TODO: validate that "userName" exists and is a string.
-		
-		//Insert onto staff table
-		this.insertUserInfo(userData);
-		//Also add the initial alias to the database:
-		return this.cloneUsernameToAliasTable((String)userData.get("userName"));	
-	}
-	
-	public boolean addStaffToDatabase(String userName) throws SQLException
-	{
-		Map<String, Object> userData = new HashMap<String,Object>(5);
-		userData.put("userName", userName);
-		
-		return this.addStaffToDatabase(userData);
-	}
-	
-	public boolean addStaffToDatabase(String userName, String timezone) throws SQLException
-	{
-		//TODO: validate the username before adding to DB.
-		Map<String, Object> userData = new HashMap<String,Object>(5);
-		userData.put("userName", userName);
-		userData.put("timezone", timezone);
-		
-		return this.addStaffToDatabase(userData);
-	}
-	
-	
-	//----------------------------------------------------------
+	//----------------------------------------------------------//
+	//			Retrieve Data
+	//----------------------------------------------------------//
 	
 	public StaffMember getStaffMember(String alias)
 	{
@@ -200,7 +165,7 @@ public class UserDatabase
 		}
 		catch (SQLException e) 
 		{
-			System.out.println("[UserDatabase.java:getStaffMember]"+e.getMessage());
+			System.err.println("[UserDatabase.java:getStaffMember]"+e.getMessage());
 		}
 		
 		//If error, return null now.
@@ -218,9 +183,81 @@ public class UserDatabase
 			return new StaffMember(result.get(0));
 		
 	}
+		
+	//-----------------------------------------------------------
+	//Add new user to database:
+	/**
+	 * 
+	 * @param userData Data about the user. Must include userName.
+	 * @return error code:	0	: success
+	 * 						-1	: Missing Critical info
+	 * 						-2	: User Already existed
+	 * 						-3	: SQL exception occurred
+	 * 						-4	: SQL insert into the tables failed.
+	 * 						-5	: userName was not a string
+	 * @throws SQLException
+	 */
+	public int addStaffToDatabase(Map<String, Object> userData) throws SQLException
+	{
+		//Make sure the critical parts have been set:
+		if(!userData.containsKey("userName"))
+		{
+			return -1;
+		}
+		if(!userData.get("userName").getClass().equals(String.class))
+		{
+			System.out.println("[UserDatabase.java:addNewUser] User '"+userData.get("userName")+"' was type:"+userData.get("userName").getClass().toString()+", not a String.");
+			return -5;
+		}
+		
+		//Check user doesn't already exist:
+		if(isExistingUser((String)userData.get("userName")))
+		{
+			System.out.println("[UserDatabase.java:addNewUser] User '"+userData.get("userName")+"' already existed.");
+			return -2;
+		}
+		
+		try
+		{
+			 if(p_insertUserInfo(userData)&&cloneUsernameToAliasTable((String)userData.get("userName")))
+			 {
+				 return 0;
+			 }
+			 
+		} 
+		catch (SQLException e) 
+		{
+			System.err.println("[UserDatabase.java:addNewUser] SQL Exception: "+e.getMessage());
+			return -3;
+		}
+		
+		return -4;
+		
+	}
+	
+	public int addStaffToDatabase(String userName) throws SQLException
+	{
+		Map<String, Object> userData = new HashMap<String,Object>(5);
+		userData.put("userName", userName);
+		
+		return this.addStaffToDatabase(userData);
+	}
+	
+	public int addStaffToDatabase(String userName, String timezone) throws SQLException
+	{
+		//TODO: validate the username before adding to DB.
+		Map<String, Object> userData = new HashMap<String,Object>(5);
+		userData.put("userName", userName);
+		userData.put("timezone", timezone);
+		
+		return this.addStaffToDatabase(userData);
+	}
+	
+	
+	
 	
 	//Add new username to database:
-	public boolean cloneUsernameToAliasTable(String userName)
+	private boolean cloneUsernameToAliasTable(String userName)
 	{
 		try 
 		{
@@ -265,12 +302,15 @@ public class UserDatabase
 			preparedStatement.setString(2, oldAlias);
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
-			System.out.println("[UserDatabase.java:addNewAlias]." + e.getMessage());
+			System.err.println("[UserDatabase.java:addNewAlias]." + e.getMessage());
 			return false;
 		}
 		return true;
 		
 	}
+	
+	//---------------------------------------------------------------------------
+	//updateUsersTimezone
 	
 	public boolean updateUsersTimezone(String user, String timezone)
 	{
@@ -281,14 +321,16 @@ public class UserDatabase
 			return false;
 		}
 		
-		return updateUserInfo(user, "timezone", timezone);
+		return p_updateUserInfo(user, "timezone", timezone);
 	}
 	
 	public boolean updateUsersTimezone(int userID, String timezone)
 	{	
-		return updateUserInfo(userID, "timezone", timezone);
+		return p_updateUserInfo(userID, "timezone", timezone);
 	}
 	
+	//------------------------------------------------------------------------------
+	// updateUsersMisc
 	public boolean updateUsersMisc(String user, String newMisc)
 	{
 		//check user exists:
@@ -298,10 +340,27 @@ public class UserDatabase
 			return false;
 		}
 		
-		return updateUserInfo(user, "misc", newMisc);
+		return p_updateUserInfo(user, "misc", newMisc);
 		
 		
 	}
+	
+	//--------------------------------------------------------------
+	//Delete a user : Public Methods
+	public boolean deleteUser(String user)
+	{
+		//Check user exists:
+		if(!isExistingUser(user))
+		{
+			System.err.println("[UserDataBase.java] Cannot delete '"+user+"' as they do not exist.");
+			return false;
+		}
+		//get userID:
+		StaffMember user_c = getStaffMember(user);
+		return p_deleteUser(user_c.databaseID);
+	}
+	//-------------------------------------------------------------------------
+	// Insert Data : Private Method
 	
 	/**
 	 * Inserts a new user into the database
@@ -309,7 +368,7 @@ public class UserDatabase
 	 * @return
 	 * @throws SQLException 
 	 */
-	public boolean insertUserInfo(Map<String,Object> userInfo) throws SQLException
+	private boolean p_insertUserInfo(Map<String,Object> userInfo) throws SQLException
 	{
 		String tablekeys= "";
 		String params = "";
@@ -363,8 +422,8 @@ public class UserDatabase
 	}
 	
 	//-----------------------------------------------------------------------------
-	//Private methods:
-	private boolean updateUserInfo(String user, String key, String value)
+	//Update UserInfo: Private methods
+	private boolean p_updateUserInfo(String user, String key, String value)
 	{
 		//TODO Change this to use UserID
 		
@@ -395,16 +454,9 @@ public class UserDatabase
 		return true;
 	}
 	
-	private boolean updateUserInfo(int userID, String key, String value)
+	private boolean p_updateUserInfo(int userID, String key, String value)
 	{	
-		//check user exists:
-		/* Don't know how to implement this for ID
-		if(!isExistingUser(user))
-		{
-			System.out.println("[UserDataBase.java] Cannot update '"+user+"' as they do not exist.");
-			return false;
-		}
-		//*/
+		//check user exists?
 		
 		//Update the user:
 		try {
@@ -418,6 +470,41 @@ public class UserDatabase
 				System.err.println("[UserDatabase.java:updateUserInfo] Expected updateCount ==1 , got "+ updates);
 				return false;
 			}
+		} catch (SQLException e) {
+			System.err.println("[UserDatabase.java:updateUserInfo] SQL Error: "+e.getMessage());
+			return false;
+		}
+		return true;
+	}
+	
+	//--------------------------------------------------------------
+	//Delete a user : Private method
+	private boolean p_deleteUser(int userID)
+	{
+		try {
+			//Delete from the staff Listing
+			PreparedStatement preparedStatement = this.write_connection.connection.prepareStatement("DELETE FROM staff WHERE id=?;");
+			preparedStatement.setInt(1, userID);
+			preparedStatement.executeUpdate();
+			int updates1 = preparedStatement.getUpdateCount();
+			if(updates1<1)
+			{
+				System.err.println("[UserDatabase.java:deleteUser] Tried to delete user entry for "+userID+". Expected updateCount >0 , got "+ updates1);
+			}
+			//And now any associated Alias listings:
+			preparedStatement = this.write_connection.connection.prepareStatement("DELETE FROM staffAliases WHERE userID=?;");
+			preparedStatement.setInt(1, userID);
+			preparedStatement.executeUpdate();
+			int updates2 = preparedStatement.getUpdateCount();
+			if(updates2<1)
+			{
+				System.err.println("[UserDatabase.java:deleteUser] Tried to delete aliases for "+userID+". Expected updateCount >0 , got "+ updates2);	
+			}
+			if(updates1<1||updates2<1)
+			{
+				return false;
+			}
+			
 		} catch (SQLException e) {
 			System.err.println("[UserDatabase.java:updateUserInfo] SQL Error: "+e.getMessage());
 			return false;

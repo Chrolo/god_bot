@@ -19,6 +19,7 @@ public class BotCommands {
 		commands.put("removeUser", RemoveUser.class);
 		commands.put("whoami?", EchoUserFacts.class);
 		commands.put("1337", CaptureChannelUserInfo.class);
+		commands.put("help", Help.class);
 	}
 	
 	//-------------------------------------------------------------------------------
