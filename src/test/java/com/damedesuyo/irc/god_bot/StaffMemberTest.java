@@ -3,8 +3,6 @@
  */
 package com.damedesuyo.irc.god_bot;
 
-import static org.junit.Assert.*;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,6 +12,7 @@ import java.util.TimeZone;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
 
 import com.google.gson.Gson;
 
@@ -69,7 +68,8 @@ public class StaffMemberTest {
 	 */
 	@Test
 	public void testSetTimezone() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
+		//
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class StaffMemberTest {
 	 */
 	@Test
 	public void testHasPrivilege() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
 
 	/**
@@ -100,7 +100,7 @@ public class StaffMemberTest {
 	 */
 	@Test
 	public void testDeHighlightUsername() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
 
 }
