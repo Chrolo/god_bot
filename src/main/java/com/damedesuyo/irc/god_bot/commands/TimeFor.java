@@ -7,6 +7,7 @@ import org.pircbotx.hooks.events.MessageEvent;
 import com.damedesuyo.irc.god_bot.StaffMember;
 import com.damedesuyo.irc.god_bot.UserDatabase;
 
+@SuppressWarnings("unused")
 public class TimeFor implements BotCommand {
 
 	@Override

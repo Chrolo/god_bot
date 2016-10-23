@@ -7,12 +7,9 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Random;
-import java.util.Set;
 import java.util.stream.Stream;
 
 import org.ini4j.Profile.Section;
@@ -29,6 +26,7 @@ import com.damedesuyo.irc.god_bot.database_def.DatabaseDefinition;
 import com.google.common.collect.ImmutableSortedSet;
 import com.google.gson.Gson;
 
+@SuppressWarnings("unused")
 public class App  extends ListenerAdapter
 {
 	//App Settings:

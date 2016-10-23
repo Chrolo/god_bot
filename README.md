@@ -5,7 +5,9 @@ _or not_
 The beginnings of an IRC bot. It's based off [PIRCbotx](https://github.com/TheLQ/pircbotx/) and maybe someday it'll be useful to have in fansub channels.
 
 ## How can I use it?
-Clone and build this. You'll need Maven.
+Clone and build this. You'll need Maven:
+- mvn validate clean compile assembly:single
+- java -jar target/god_bot-0.0.1-jar-with-dependencies.jar
 
 You'll also need to put your config into 'config/settings.ini'. See the example for, you know, an example.
 
@@ -17,7 +19,7 @@ Please file an issue on github. If I don't respond within 3 days, highlight me o
 
 ## Goals
  - Staff Management System
-	- [ ] Allow staff to easily find out the time for other staff members, without having to know/remember their locations.
+	- [x] Allow staff to easily find out the time for other staff members, without having to know/remember their locations.
 	- Different staff privilege levels:
 		- [ ] Adding/Removing staff
 		- [ ] seeing alternate contact info
