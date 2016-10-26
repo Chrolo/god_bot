@@ -79,5 +79,20 @@ public class TaskTest {
 		taskAll.subtasks[1].subtasks[1].done = true;	//Task 2
 		assertEquals("Once task 2 is complete, 4 is also complete, as is 5",0, taskAll.getUnfinishedTaskIds().size());
 	}
+	
+	
+	@Test
+	public void test_createTasksFromJson() {
+		String testStr = "{taskID:2, subTasks:[{taskID:3, done:false}, {taskID:4, done: false}]}";
+		String testStr2 = "{    taskID:2, subTasks:[{taskID:3, done:false}, {taskID:4, done: false}]    }";
+		String testStr3 = "{taskID:1, done:false}";
+		try {
+			Task.createTasksFromJson(testStr);
+			Task.createTasksFromJson(testStr2);
+			Task.createTasksFromJson(testStr3);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
 
 }
