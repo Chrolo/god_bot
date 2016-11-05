@@ -25,6 +25,7 @@ Please file an issue on github. If I don't respond within 3 days, highlight me o
 		- [ ] seeing alternate contact info
 	- [ ] Checking what projects a staff member is assigned to
 	- [ ] Getting alternate contact details for a staff member
+	- [ ] find out staff qualifications (Typesetter, Editor, Encoder, etc)
  - Project Management
   - [ ] Getting a list of current projects
   - [ ] Getting a list of past projects
