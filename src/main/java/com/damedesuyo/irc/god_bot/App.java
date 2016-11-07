@@ -37,6 +37,7 @@ public class App  extends ListenerAdapter
 	
 	public void onMessage(MessageEvent event) 
 	{
+		System.out.println(event.getMessage());
 		if(event.getMessage().startsWith(botCommandIdentifier))
 		{
 			//Cut out the command identifier:
@@ -175,11 +176,14 @@ public class App  extends ListenerAdapter
 		//Configure what we want our bot to do
 		Configuration configuration = new Configuration.Builder()
 				.setName(ini.get("bot","name",String.class))
+				.setLogin(ini.get("bot","name",String.class))
+				.setNickservPassword(ini.get("bot","password",String.class))
 				.addServer(ini.get("bot","server",String.class))
 				.addAutoJoinChannel(ini.get("bot","mainChannel",String.class))
+				.setRealName(ini.get("bot","name",String.class))
+				
 				.addListener(new App())
 				.buildConfiguration();
-
 
 
 		//--------------------------------------------------------
@@ -190,7 +194,20 @@ public class App  extends ListenerAdapter
          bot = new PircBotX(configuration);
          //Connect to the server
          bot.startBot();
+         
+         
         //*/
+	}
+	
+
+	//Problem Cases:
+	
+	public void onNickAlreadyInUse(NickAlreadyInUseEvent event)
+	{
+		System.out.println("Aparently that nicknames already in use. I'll try to kick them!");
+		System.out.println("..or atleast I would if Chrolo knew how");
+		event.respond(event.getUsedNick()+"_");
+		
 	}
 	
 	
