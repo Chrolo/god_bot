@@ -37,21 +37,21 @@ public class App  extends ListenerAdapter
 	
 	public void onMessage(MessageEvent event) 
 	{
-		System.out.println(event.getMessage());
 		if(event.getMessage().startsWith(botCommandIdentifier))
 		{
+			
+			
 			//Cut out the command identifier:
-			System.out.println("Command Seen: '"+event.getMessage()+"'");
 			String modMessage = event.getMessage().substring(botCommandIdentifier.length(),event.getMessage().length());
-			System.out.println("ModMessage: "+modMessage);
 			String command_args[] = modMessage.split(" ");
 			String command = command_args[0];
-			System.out.println("Command seen was:\t"+command);
+			
+			//logging:
+			System.out.println("'"+event.getUser().getNick()+"' used the command '"+modMessage+"'");
 			
 			//check new Commands API
 			if(botCommands.getSetOfCommands().contains(command))
 			{
-				System.out.println("The Command '"+command+"' exists in the new API");
 				try 
 				{
 					BotCommand commandInst = botCommands.getCommandClassInstance(command);

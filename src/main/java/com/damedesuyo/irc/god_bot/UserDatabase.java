@@ -402,6 +402,7 @@ public class UserDatabase
 		
 		for(Map<String,Object> row : results)
 		{
+			System.out.println("[UserDatabase:getQualifications] row was: "+row);
 			returnArray.add(this.getStaffMember((int)row.get("staffID")));
 		}
 				

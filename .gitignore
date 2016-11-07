@@ -2,8 +2,11 @@
 
 #Personal Settings
 config/settings.ini
-#Some scripts I use to quick load the database
+WORK TO DO.md
+
+#Some script data I use to quick load the database
 databaseSetupScripts/testData.php
+
 
 #-- Maven Ignores --
 #from https://github.com/github/gitignore/blob/master/Maven.gitignore
