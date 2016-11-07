@@ -3,7 +3,7 @@
 #Personal Settings
 config/settings.ini
 #Some scripts I use to quick load the database
-DatabaseSetup_php/
+databaseSetupScripts/testData.php
 
 #-- Maven Ignores --
 #from https://github.com/github/gitignore/blob/master/Maven.gitignore

@@ -159,7 +159,7 @@ public class UserDatabase
 		ArrayList<Map<String,Object>> result = null;
 		try 
 		{
-			getStaffStatement = read_connection.connection.prepareStatement("SELECT * FROM staff INNER JOIN staffAliases on staffAliases.userID = staff.id WHERE staffAliases.alias = ? ;");
+			getStaffStatement = read_connection.connection.prepareStatement("SELECT * FROM staff INNER JOIN staffAliases on staffAliases.staffID = staff.id WHERE staffAliases.alias = ? ;");
 			getStaffStatement.setString(1, alias);
 			result = mysqlConnector.convertResultSetToArrayList(getStaffStatement.executeQuery());
 		}
@@ -261,7 +261,7 @@ public class UserDatabase
 	{
 		try 
 		{
-			PreparedStatement preparedStatement = this.write_connection.connection.prepareStatement("INSERT INTO staffAliases (alias, userID) (SELECT userName, id FROM staff WHERE userName= ? );");
+			PreparedStatement preparedStatement = this.write_connection.connection.prepareStatement("INSERT INTO staffAliases (alias, staffID) (SELECT userName, id FROM staff WHERE userName= ? );");
 			preparedStatement.setString(1, userName);
 			preparedStatement.executeUpdate();
 			int updates = preparedStatement.getUpdateCount();
@@ -286,7 +286,7 @@ public class UserDatabase
 	
 	public boolean addNewAlias(String oldAlias, String newAlias)
 	{
-		//TODO: Update to use userID tag
+		//TODO: Update to use staffID tag
 		
 		//Check that the new name isn't already listed:
 		if( (isExistingUser(newAlias)) || (!isExistingUser(oldAlias)) )
@@ -297,7 +297,7 @@ public class UserDatabase
 		
 		//Prepare Sql statement:
 		try {
-			PreparedStatement preparedStatement = this.write_connection.connection.prepareStatement("INSERT INTO staffAliases (alias, userID) SELECT ?, userID from staffAliases WHERE alias=?;");
+			PreparedStatement preparedStatement = this.write_connection.connection.prepareStatement("INSERT INTO staffAliases (alias, staffID) SELECT ?, staffID from staffAliases WHERE alias=?;");
 			preparedStatement.setString(1, newAlias);
 			preparedStatement.setString(2, oldAlias);
 			preparedStatement.executeUpdate();
@@ -324,9 +324,9 @@ public class UserDatabase
 		return p_updateUserInfo(user, "timezone", timezone);
 	}
 	
-	public boolean updateUsersTimezone(int userID, String timezone)
+	public boolean updateUsersTimezone(int staffID, String timezone)
 	{	
-		return p_updateUserInfo(userID, "timezone", timezone);
+		return p_updateUserInfo(staffID, "timezone", timezone);
 	}
 	
 	//------------------------------------------------------------------------------
@@ -355,7 +355,7 @@ public class UserDatabase
 			System.err.println("[UserDataBase.java] Cannot delete '"+user+"' as they do not exist.");
 			return false;
 		}
-		//get userID:
+		//get staffID:
 		StaffMember user_c = getStaffMember(user);
 		return p_deleteUser(user_c.databaseID);
 	}
@@ -425,7 +425,7 @@ public class UserDatabase
 	//Update UserInfo: Private methods
 	private boolean p_updateUserInfo(String user, String key, String value)
 	{
-		//TODO Change this to use UserID
+		//TODO Change this to use staffID
 		
 		//check user exists:
 		if(!isExistingUser(user))
@@ -437,7 +437,7 @@ public class UserDatabase
 		//Update the user:
 		try {
 			
-			PreparedStatement preparedStatement = this.write_connection.connection.prepareStatement("UPDATE staff INNER JOIN staffAliases ON staffAliases.userID=staff.id SET staff."+key+"= ? WHERE staffAliases.alias=?;");
+			PreparedStatement preparedStatement = this.write_connection.connection.prepareStatement("UPDATE staff INNER JOIN staffAliases ON staffAliases.staffID=staff.id SET staff."+key+"= ? WHERE staffAliases.alias=?;");
 			preparedStatement.setString(1, value);
 			preparedStatement.setString(2, user);
 			preparedStatement.executeUpdate();
@@ -454,7 +454,7 @@ public class UserDatabase
 		return true;
 	}
 	
-	private boolean p_updateUserInfo(int userID, String key, String value)
+	private boolean p_updateUserInfo(int staffID, String key, String value)
 	{	
 		//check user exists?
 		
@@ -462,7 +462,7 @@ public class UserDatabase
 		try {
 			PreparedStatement preparedStatement = this.write_connection.connection.prepareStatement("UPDATE staff SET "+key+"= ? WHERE id=?;");
 			preparedStatement.setString(1, value);
-			preparedStatement.setInt(2, userID);
+			preparedStatement.setInt(2, staffID);
 			preparedStatement.executeUpdate();
 			int updates = preparedStatement.getUpdateCount();
 			if(updates != 1)
@@ -479,26 +479,26 @@ public class UserDatabase
 	
 	//--------------------------------------------------------------
 	//Delete a user : Private method
-	private boolean p_deleteUser(int userID)
+	private boolean p_deleteUser(int staffID)
 	{
 		try {
 			//Delete from the staff Listing
 			PreparedStatement preparedStatement = this.write_connection.connection.prepareStatement("DELETE FROM staff WHERE id=?;");
-			preparedStatement.setInt(1, userID);
+			preparedStatement.setInt(1, staffID);
 			preparedStatement.executeUpdate();
 			int updates1 = preparedStatement.getUpdateCount();
 			if(updates1<1)
 			{
-				System.err.println("[UserDatabase.java:deleteUser] Tried to delete user entry for "+userID+". Expected updateCount >0 , got "+ updates1);
+				System.err.println("[UserDatabase.java:deleteUser] Tried to delete user entry for "+staffID+". Expected updateCount >0 , got "+ updates1);
 			}
 			//And now any associated Alias listings:
-			preparedStatement = this.write_connection.connection.prepareStatement("DELETE FROM staffAliases WHERE userID=?;");
-			preparedStatement.setInt(1, userID);
+			preparedStatement = this.write_connection.connection.prepareStatement("DELETE FROM staffAliases WHERE staffID=?;");
+			preparedStatement.setInt(1, staffID);
 			preparedStatement.executeUpdate();
 			int updates2 = preparedStatement.getUpdateCount();
 			if(updates2<1)
 			{
-				System.err.println("[UserDatabase.java:deleteUser] Tried to delete aliases for "+userID+". Expected updateCount >0 , got "+ updates2);	
+				System.err.println("[UserDatabase.java:deleteUser] Tried to delete aliases for "+staffID+". Expected updateCount >0 , got "+ updates2);	
 			}
 			if(updates1<1||updates2<1)
 			{
