@@ -62,6 +62,14 @@ public class Task {
 		this.taskId = taskId;
 		this.subtasks = subTasks;
 	}
+	
+	public Task(int taskId, boolean done)
+	{
+		this.taskId = taskId;
+		this.done= done;
+	}
+	
+	
 	public Task(int taskId)
 	{
 		this(taskId,null); 
