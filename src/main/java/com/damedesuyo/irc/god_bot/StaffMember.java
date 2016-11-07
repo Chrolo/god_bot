@@ -29,7 +29,6 @@ public class StaffMember {
 	
 	public StaffMember(Map<String,Object> userData)
 	{	//Constructor using data from Database:
-		System.out.println("Staff constructor got: "+userData);
 		this.username = (String) userData.get("userName");
 		this.databaseID = (int) userData.get("id");
 		
@@ -38,11 +37,11 @@ public class StaffMember {
 		
 		//set priveleges:
 		this.privileges = new ArrayList<Privilege>();
-		if(userData.get("priv_addStaff").equals("Y"))
+		if(userData.get("priv_addStaff") != null && userData.get("priv_addStaff").equals('Y'))
 		{
 			this.privileges.add(Privilege.ADD_STAFF);
 		}
-		if(userData.get("priv_removeStaff").equals("Y"))
+		if(userData.get("priv_addStaff") != null && userData.get("priv_removeStaff").equals("Y"))
 		{
 			this.privileges.add(Privilege.REMOVE_STAFF);
 		}

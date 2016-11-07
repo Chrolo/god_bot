@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +35,7 @@ public class UserDatabase
 	
 	private DatabaseTableDefinition StaffTableStructure;
 	private DatabaseTableDefinition StaffAliasTableStructure;
+	private DatabaseTableDefinition StaffQualificationTableStructure;
 	
 	//--------------------------------------------------------------------------------
 	//Get Shared instance:
@@ -101,6 +103,7 @@ public class UserDatabase
 			dbDef = gson.fromJson(dbDefFile, dbDef.getClass());
 			this.StaffTableStructure = dbDef.tables.get("staff");
 			this.StaffAliasTableStructure = dbDef.tables.get("staffAliases");
+			this.StaffQualificationTableStructure = dbDef.tables.get("staffQualifications");
 		} 
 		catch (FileNotFoundException e) 
 		{
@@ -177,6 +180,37 @@ public class UserDatabase
 		else if(result.size()>1)
 		{	//should this be an error?
 			System.err.println("[getStaffMember] Saw "+result.size()+ " possible people matching "+alias+". But will return 1st.");
+			return new StaffMember(result.get(0));
+		}
+		else
+			return new StaffMember(result.get(0));
+		
+	}
+	
+	public StaffMember getStaffMember(int id)
+	{
+		final PreparedStatement getStaffStatement;
+		ArrayList<Map<String,Object>> result = null;
+		try 
+		{
+			getStaffStatement = read_connection.connection.prepareStatement("SELECT * FROM staff WHERE id = ? ;");
+			getStaffStatement.setInt(1, id);;
+			result = mysqlConnector.convertResultSetToArrayList(getStaffStatement.executeQuery());
+		}
+		catch (SQLException e) 
+		{
+			System.err.println("[UserDatabase.java:getStaffMember]"+e.getMessage());
+		}
+		
+		//If error, return null now.
+		if(result == null || result.size() == 0 )
+		{
+			System.err.println("[getStaffMember] Found no results for '"+id+"'");
+			return null;
+		}
+		else if(result.size()>1)
+		{	//should this be an error?
+			System.err.println("[getStaffMember] Saw "+result.size()+ " possible people matching "+id+". But will return 1st.");
 			return new StaffMember(result.get(0));
 		}
 		else
@@ -343,6 +377,36 @@ public class UserDatabase
 		return p_updateUserInfo(user, "misc", newMisc);
 		
 		
+	}
+	
+	//--------------------------------------------------------------
+	//
+	public ArrayList<StaffMember> getMembersQualifiedFor(String qualification)
+	{
+		//Check the column name is valid:
+		if(!this.StaffQualificationTableStructure.columns.containsKey(qualification))
+		{
+			System.err.println("[UserDatabase] '"+qualification+"' is not a valid collumn in staffQualifications");
+			return null;
+		}
+		
+		ArrayList<StaffMember> returnArray = new ArrayList<StaffMember>();
+
+		String statement = "SELECT * FROM staffQualifications WHERE "+qualification+" ='Y';";
+
+		ResultSet resSet = this.read_connection.queryDatabase(statement);
+
+		
+		ArrayList<Map<String,Object>> results = mysqlConnector.convertResultSetToArrayList(resSet);
+		
+		
+		for(Map<String,Object> row : results)
+		{
+			System.out.println("[UserDatabase:getQualifications] row was: "+row);
+			returnArray.add(this.getStaffMember((int)row.get("staffID")));
+		}
+				
+		return returnArray;
 	}
 	
 	//--------------------------------------------------------------

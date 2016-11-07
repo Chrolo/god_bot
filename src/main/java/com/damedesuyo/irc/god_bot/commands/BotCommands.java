@@ -20,6 +20,7 @@ public class BotCommands {
 		commands.put("whoami?", EchoUserFacts.class);
 		commands.put("1337", CaptureChannelUserInfo.class);
 		commands.put("help", Help.class);
+		commands.put("whocan", WhoCan.class);
 	}
 	
 	//-------------------------------------------------------------------------------

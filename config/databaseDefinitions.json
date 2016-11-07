@@ -31,8 +31,14 @@
 			"columns":
 			{
 				"staffID"		:{ "desc_s": "StaffID",		"desc": "The asociated StaffID",	"type": "INT(11)" },
-				"typesetter"	:{ "desc_s": "Typesetter",	"desc": "Can typeset", 	"type": "ENUM('N','Y')",	"extra" : "DEFAULT 'N' "},
-				"encoder"		:{ "desc_s": "Encoder",		"desc": "Can encode", 	"type": "ENUM('N','Y')",	"extra" : "DEFAULT 'N' "}
+				"encoder"		:{ "desc_s": "Encoder",		"desc": "Can encode", 	"type": "ENUM('N','Y')",	"extra": "DEFAULT 'N' "},
+				"editor"		:{ "desc_s": "Editor",		"desc": "Can edit", 	"type": "ENUM('N','Y')",	"extra": "DEFAULT 'N' "},
+				"kfxer"			:{ "desc_s": "KFXer",		"desc": "Can KFX", 	"type": "ENUM('N','Y')",	"extra": "DEFAULT 'N' "},
+				"projectLeader"	:{ "desc_s": "project Leader",		"desc": "Can lead projects", 	"type": "ENUM('N','Y')",	"extra": "DEFAULT 'N' "},
+				"qualityChecker":{ "desc_s": "Quality Checker",		"desc": "Can check quality", 	"type": "ENUM('N','Y')",	"extra": "DEFAULT 'N' "},
+				"timer"		:{ "desc_s": "Timer",		"desc": "Can time", 	"type": "ENUM('N','Y')",	"extra": "DEFAULT 'N' "},
+				"typesetter"	:{ "desc_s": "Typesetter",	"desc": "Can typeset", 	"type": "ENUM('N','Y')",	"extra": "DEFAULT 'N' "},
+				"translator"	:{ "desc_s": "Translator",	"desc": "Can translate", 	"type": "ENUM('N','Y')",	"extra": "DEFAULT 'N' "}
 			}
 		}
 	}
