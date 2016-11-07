@@ -25,6 +25,7 @@ Please file an issue on github. If I don't respond within 3 days, highlight me o
 		- [ ] seeing alternate contact info
 	- [ ] Checking what projects a staff member is assigned to
 	- [ ] Getting alternate contact details for a staff member
+	- [x] find out staff qualifications (Typesetter, Editor, Encoder, etc)
  - Project Management
   - [ ] Getting a list of current projects
   - [ ] Getting a list of past projects
@@ -34,8 +35,7 @@ Please file an issue on github. If I don't respond within 3 days, highlight me o
 	 - [ ] See who's running it
 	 - [ ] Find an episode torrent
  - General use
-  - [ ] Create a way to initialise the database
-	 - I've actually got one I wrote in php for this project, but I don't know if it's "production ready"
+  - [x] Create a way to initialise the database
   - [ ] Track username changes in the channel.
   - [ ] Identify users to correctly set permission levels
  - Misc
