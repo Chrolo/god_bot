@@ -34,6 +34,11 @@ public class JsonToTaskTest {
 		testTask = new Task(1,array);
 		testDesc = "Task with Subtasks";
 		assertEquals("Failed"+testDesc,testTask,JsonToTask.convertJsonToTasks(testStr));
+		
+		testStr = "{\"taskId\":1,\"subTasks\":[{\"taskId\":2},{\"taskId\":3}]}";
+		testTask = new Task(1,array);
+		testDesc = "Task with Subtasks, checking that done defaults to false, even if not in the JSON";
+		assertEquals("Failed"+testDesc,testTask,JsonToTask.convertJsonToTasks(testStr));
 	}
 
 

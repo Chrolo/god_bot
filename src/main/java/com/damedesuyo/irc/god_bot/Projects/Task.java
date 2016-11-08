@@ -12,21 +12,40 @@ import java.util.regex.Pattern;
 /**
  * A rough data structure:
  * {
+ * 		//Essentials:
  * 		taskId: int
  * 		subTasks: Task[],
- * 		done: boolean
+ * 		done: boolean,
+ * 
+ * 		//Optionals
+ * 		staffId: int,
  * }
  * @author Chrolo
  *
  */
 
 public class Task {
-	public int taskId;
+	
+	//essentials
+	private int taskId;
 	public Task[] subTasks;
-	public boolean done = false;
+	private boolean done = false;
+	
+	//optionals
+	private int staffId;
+	
 	
 	//-------------------------------
 	// Constructors
+	// Note: This will usually be set by GSON.
+	
+	public Task(int taskId, Task[] subTasks, int staffId)
+	{
+		this.taskId = taskId;
+		this.subTasks = subTasks;
+		this.staffId = staffId;
+	}
+	
 	public Task(int taskId, Task[] subTasks)
 	{
 		this.taskId = taskId;
@@ -39,6 +58,11 @@ public class Task {
 		this.done = done;
 	}
 	
+	public Task(int taskId, int staffId)
+	{
+		this(taskId, false);
+		this.staffId = staffId;
+	}
 	
 	public Task(int taskId)
 	{
@@ -146,6 +170,42 @@ public class Task {
 		
 		return flag;
 		
+	}
+
+	//------------------------------------
+	// Generated Getters/Setters
+	public int getTaskId() {
+		return this.taskId;
+	}
+
+	public boolean isDone() {
+		if(this.subTasks == null)
+		{
+			return done;
+		}
+		else
+		{
+			return this.areSubtasksComplete();
+		}
+	}
+
+	public void setDone(boolean done) {
+		if(this.subTasks != null)
+		{
+			System.err.println("[Task] Attempted to set 'done' on task with subTasks. TaskId:"+this.taskId);
+		}
+		else
+		{
+			this.done = done;
+		}
+	}
+
+	public int getStaffId() {
+		return staffId;
+	}
+
+	public void setStaffId(int staffId) {
+		this.staffId = staffId;
 	}
 	
 }

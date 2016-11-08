@@ -22,12 +22,12 @@ public class TaskTest {
 		
 		assertFalse("At default, tasks are not done.",taskAll.areSubtasksComplete());
 		
-		taskAll.subTasks[0].done = true;
-		taskAll.subTasks[1].done = true;
+		taskAll.subTasks[0].setDone(true);
+		taskAll.subTasks[1].setDone(true);
 		
 		assertFalse("With just one outstanding, stil false.",taskAll.areSubtasksComplete());
 		
-		taskAll.subTasks[2].done = true;
+		taskAll.subTasks[2].setDone(true);
 		assertTrue("Once all sub tasks are complete, task is complete",taskAll.areSubtasksComplete());
 	}
 	
@@ -43,12 +43,12 @@ public class TaskTest {
 		
 		assertFalse("At default, tasks are not done.",taskAll.areSubtasksComplete());
 		
-		taskAll.subTasks[0].done = true;
-		taskAll.subTasks[1].subTasks[0].done = true;
+		taskAll.subTasks[0].setDone(true);
+		taskAll.subTasks[1].subTasks[0].setDone(true);
 		
-		assertFalse("With just one nest subtask outstanding, stil false.",taskAll.areSubtasksComplete());
+		assertFalse("With just one nest subtask outstanding, still false.",taskAll.areSubtasksComplete());
 		
-		taskAll.subTasks[1].subTasks[1].done = true;
+		taskAll.subTasks[1].subTasks[1].setDone(true);
 		assertTrue("Once all sub tasks are complete, task is complete",taskAll.areSubtasksComplete());
 	}
 	
@@ -70,13 +70,13 @@ public class TaskTest {
 		expectedTaskIDs.add(5);
 		assertEquals("At default, all tasks are not done.",expectedTaskIDs, taskAll.getUnfinishedTaskIds());
 		
-		taskAll.subTasks[1].subTasks[0].done = true;	//Task 1
-		taskAll.subTasks[0].done = true;	//Task 3
+		taskAll.subTasks[1].subTasks[0].setDone(true);	//Task 1
+		taskAll.subTasks[0].setDone(true);	//Task 3
 		expectedTaskIDs.remove(1);
 		expectedTaskIDs.remove(3);
 		assertEquals("After Task 1 and 3 are done. Task 2, 4 and 5 are still outstanding.", expectedTaskIDs, taskAll.getUnfinishedTaskIds());
 		
-		taskAll.subTasks[1].subTasks[1].done = true;	//Task 2
+		taskAll.subTasks[1].subTasks[1].setDone(true);	//Task 2
 		assertEquals("Once task 2 is complete, 4 is also complete, as is 5",0, taskAll.getUnfinishedTaskIds().size());
 	}
 	
@@ -93,9 +93,9 @@ public class TaskTest {
 		assertFalse("Task isn't equal to any other class", task1.equals("string"));
 		assertFalse("Task isn't equal to a different Task", task1.equals(task2));
 		assertTrue("Task should be equal to another Task creater with same constructor arguments. ("+task1+" vs "+task1_again+")",task1.equals(task1_again));
-		task1_again.done = true;
+		task1_again.setDone(true);
 		assertFalse("The same tasks, but now one has been 'finished' ("+task1+" vs "+task1_again+")",task1.equals(task1_again));
-		task1.done = true;
+		task1.setDone(true);
 		assertTrue("If both tasks are 'done' aswell, they should match. ("+task1+" vs "+task1_again+")",task1.equals(task1_again));
 		
 		fail("Not yet fully tested.\n'done' flags aren't checked.\nNested Tasks aren't checked.");
