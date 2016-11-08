@@ -9,81 +9,51 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Task {
-	public Task[] subtasks;
-	public int taskId;
-	public boolean done = false;
-	
-	//-------------------------------
-	// Static Methods
-	public static Task[] createTasksFromJson(String jsonString) throws Exception
-	{
-		/* //The Gson way...
-		Gson gson = new Gson();
-		Object temp = new Object();
-		temp = gson.fromJson(jsonString, temp.getClass());
+/**
+ * A rough data structure:
+ * {
+ * 		taskId: int
+ * 		subTasks: Task[],
+ * 		done: boolean
+ * }
+ * @author Chrolo
+ *
+ */
 
-		System.out.println(temp);
-		System.out.println("Class is: "+temp.getClass().getName());
-		
-		//Make sure it's an ArrayList:
-		if(temp.getClass().getName() != "java.util.ArrayList")
-		{
-			throw new Exception("The Json didn't create an Array...");
-		}
-		ArrayList<Object> temp2 = (ArrayList<Object>) temp;
-		for(Object obj : temp2)
-		{
-			System.out.println("Nested is: "+obj);
-		}
-		
-		/*/ //My crazy custom way (recursion baby!)
-		Pattern taskRegexBasic = Pattern.compile("\\{\\s*(.*)\\s*\\}");
-		Matcher matchedJsonTask = taskRegexBasic.matcher(jsonString);
-		if(!matchedJsonTask.matches())
-		{
-			throw new Exception("The Json didn't create an Array...");
-		}
-		else
-		{
-			System.out.println("Found task: |" + matchedJsonTask.group(1)+"|");
-		}
-		
-		//*/
-		
-		System.out.println("[Task.createTasksFromJson()] not finished!");
-		return null;
-	}
+public class Task {
+	public int taskId;
+	public Task[] subTasks;
+	public boolean done = false;
 	
 	//-------------------------------
 	// Constructors
 	public Task(int taskId, Task[] subTasks)
 	{
 		this.taskId = taskId;
-		this.subtasks = subTasks;
+		this.subTasks = subTasks;
 	}
 	
 	public Task(int taskId, boolean done)
 	{
 		this.taskId = taskId;
-		this.done= done;
+		this.done = done;
 	}
 	
 	
 	public Task(int taskId)
 	{
-		this(taskId,null); 
+		this(taskId, false); 
 	}
 	
 	//-------------------------------
 	// Public Methods
 	public boolean areSubtasksComplete()
 	{
-		if(this.subtasks == null){ return true; }
+		if(this.subTasks == null){ return true; }
 		boolean flag = true;
-		for(Task task : this.subtasks)
+		for(Task task : this.subTasks)
 		{
-			if(task.subtasks != null)
+			if(task.subTasks != null)
 			{
 				flag &= task.areSubtasksComplete();
 			} else {
@@ -96,17 +66,17 @@ public class Task {
 	public Set<Integer> getUnfinishedTaskIds()
 	{
 		Set<Integer> taskIDs = new TreeSet<Integer>();
-		if(this.subtasks == null && this.done == false)
+		if(this.subTasks == null && this.done == false)
 		{
 			taskIDs.add(this.taskId);
 		}
-		if(this.subtasks != null) 
+		if(this.subTasks != null) 
 		{
 			if(!this.areSubtasksComplete())
 			{
 				taskIDs.add(this.taskId);
 			}
-			for(Task task : this.subtasks)
+			for(Task task : this.subTasks)
 			{
 				taskIDs.addAll(task.getUnfinishedTaskIds());
 			}
@@ -122,8 +92,8 @@ public class Task {
 	 */
 	public String toString()
 	{
-		String res = "{ taskID: " + this.taskId ;
-		if(this.subtasks == null)
+		String res = "{ taskId: " + this.taskId ;
+		if(this.subTasks == null)
 		{
 			res = res + ", done: " + this.done;
 		}
@@ -132,7 +102,7 @@ public class Task {
 			res = res + ", done: " + this.areSubtasksComplete();
 			res = res + ", subTasks: [";
 			boolean flag = false;
-			for(Task task : this.subtasks)
+			for(Task task : this.subTasks)
 			{
 				if(flag){res += ", ";}
 				flag = true;
@@ -145,6 +115,37 @@ public class Task {
 		return res;
 	}
 	
-	
+	public boolean equals(Object obj)
+	{
+		//Check it's the proper class:
+		if(!obj.getClass().isAssignableFrom(Task.class)){return false;}
+			
+		//Convert to class and test:
+		Task otherTask = (Task)obj;
+		if(this.done != otherTask.done){return false;}
+		if(this.taskId != otherTask.taskId){return false;}
+		
+		boolean flag = true;
+		if(subTasks != null)
+		{
+			if(otherTask.subTasks == null)
+			{
+				return false;
+			}
+			
+			if(otherTask.subTasks.length != this.subTasks.length)
+			{
+				return false;
+			}
+			
+			for(int i=0; i> subTasks.length; i++)
+			{
+				flag &= this.subTasks[i].equals(otherTask.subTasks[i]);
+			}
+		}
+		
+		return flag;
+		
+	}
 	
 }
