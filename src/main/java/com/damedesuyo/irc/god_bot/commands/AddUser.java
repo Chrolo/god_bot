@@ -33,7 +33,7 @@ public class AddUser implements BotCommand{
 	{
 		StaffMember user = UserDatabase.getSharedInstance().getStaffMember(event.getUser().getNick());
 		boolean isVerified = event.getUser().isVerified();
-		if(isVerified &&user.hasPrivilege(Privilege.ADD_STAFF))
+		if(isVerified && user.hasPrivilege(Privilege.ADD_STAFF))
 		{
 
 			UserDatabase userDatabase = UserDatabase.getSharedInstance();
@@ -83,7 +83,7 @@ public class AddUser implements BotCommand{
 		{
 			if(isVerified)
 			{
-				event.respondChannel("I'm afraid I can't let you do that Dave");
+				event.respondChannel("I'm afraid I can't let you do that Dave (You don't have Staff adding priviledge)");
 			}
 			else
 			{
