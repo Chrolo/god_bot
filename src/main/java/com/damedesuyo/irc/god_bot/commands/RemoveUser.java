@@ -39,7 +39,7 @@ public class RemoveUser implements BotCommand {
 			
 			if(userDatabase.deleteUser(args[0]))
 			{
-				event.respondChannel("I've erased all traces of '"+args[0]+"' ¬_¬" );
+				event.respondChannel("I've erased all traces of '"+StaffMember.deHighlightUsername(args[0])+"' ¬_¬" );
 			}
 			else
 			{

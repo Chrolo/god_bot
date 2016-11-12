@@ -30,7 +30,7 @@ public class WhoCan implements BotCommand {
 			
 			ArrayList<StaffMember> staff = UserDatabase.getSharedInstance().getMembersQualifiedFor(qualification);
 			
-			if(staff == null)	//TODO: remove this once i've done entry validation.
+			if(staff == null)	//TODO [Cleanup] remove this once i've added argument validation to previous calls method.
 			{
 				event.respondChannel("Oops, something went wrong ;_; Maybe try another word for the qualification?");
 				return;
@@ -43,7 +43,7 @@ public class WhoCan implements BotCommand {
 				if(flag)
 					staffString += ", ";
 				flag = true;
-				staffString += StaffMember.deHighlightUsername(staff_c.username) ;
+				staffString += StaffMember.deHighlightUsername(staff_c.username()) ;
 			}
 			event.respondChannel("The '"+args[0]+ "' people are: "+staffString);
 		}

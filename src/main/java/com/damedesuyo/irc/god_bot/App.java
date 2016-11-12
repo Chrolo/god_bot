@@ -73,18 +73,16 @@ public class App  extends ListenerAdapter
 			}
 			
 			//Now look through Old APIs to respond:
-			if (modMessage.startsWith("hello"))
-			{
-				System.out.println("Saw a hello message");
-				String user_d = StaffMember.deHighlightUsername(event.getUser().getNick());
-				
-				event.respondChannel("Hello "+user_d +"!");
-			}
 			//------------------------------------------------------------------------
 			else if(modMessage.startsWith("ShutDown"))
 			{
-				if(event.getUser().getNick().equals("Chrolo"))	//Only the best security practises here kiddo!
+				StaffMember user = UserDatabase.getSharedInstance().getStaffMember(event.getUser().getNick());
+				boolean isVerified = event.getUser().isVerified();
+				if(isVerified && user.hasPrivilege(Privilege.SHUTDOWN_BOT))
+				{
+					event.respondChannel("Oyasumi!");
 					bot.close();
+				}
 				else
 					event.respondChannel("You're not my REAL father! Screw you!");
 			}
@@ -135,50 +133,12 @@ public class App  extends ListenerAdapter
 			}
 		}
 		
-		/*
-		//Test App
-		
-		//Print out list of users
-		UserDatabase userDatabase = UserDatabase.getSharedInstance();
-		System.out.println("Existing usernames are"+userDatabase.getValidUsers());
-		
-		
-		//Get Chrolo:
-		StaffMember chrolo_u = userDatabase.getStaffMember("Chrolo");
-		chrolo_u.printStaffDataToConsole();
-		//and print his timezone:
-		System.out.println("Time for "+chrolo_u.username+" is "+chrolo_u.getStaffLocalTimeAsStringWithFormat("HH:mm:ss"));
-		
-		//Get Begna
-		StaffMember begna_u = userDatabase.getStaffMember("begna112");
-		begna_u.printStaffDataToConsole();
-		//and print his timezone:
-		System.out.println("Time for "+begna_u.username+" is "+begna_u.getStaffLocalTimeAsStringWithFormat("HH:mm:ss"));
-		
-		//Get *?
-		StaffMember star_u = userDatabase.getStaffMember("*");
-		if(star_u != null)
-		{
-			star_u.printStaffDataToConsole();
-			//and print his timezone:
-			System.out.println("Time for "+star_u.username+" is "+star_u.getStaffLocalTimeAsStringWithFormat("HH:mm:ss"));
-		}
-		
-		//*/
-		
 		Gson gson = new Gson();
 		//Read JSON from file:
 		DatabaseDefinition dbDef = new DatabaseDefinition();
 		Reader dbDefFile = new FileReader("config/databaseDefinitions.json");
 		dbDef = gson.fromJson(dbDefFile, dbDef.getClass());
 		
-		
-		/*
-		AppDictionary test = AppDictionary.getSharedInstance();
-		System.out.println("Dictionary is: "+test);
-		System.out.println("global dictionary is: "+test.globalDictionary);
-		System.out.println("TS => "+test.getSubstitutionFromAllDictionaries("TS"));
-		//*/
 		
 		//Configure what we want our bot to do
 		Configuration configuration = new Configuration.Builder()
@@ -199,9 +159,7 @@ public class App  extends ListenerAdapter
          //Create our bot with the configuration
          bot = new PircBotX(configuration);
          //Connect to the server
-         bot.startBot();
-         
-         
+         bot.startBot();  
         //*/
 	}
 	

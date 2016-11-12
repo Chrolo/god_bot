@@ -9,10 +9,12 @@ import java.util.TimeZone;
 public class StaffMember {
 
 	// Database Tag:
-	public int databaseID;
+	private int databaseID;
 
 	// IRC identifiers:
-	public String username;
+	private String username;
+
+
 	private String hostname;
 
 	// Fansubbing description:
@@ -28,29 +30,35 @@ public class StaffMember {
 	//Constructors
 	
 	public StaffMember(Map<String,Object> userData)
-	{	//Constructor using data from Database:
+	{
+		//Constructor using data from Database:
 		this.username = (String) userData.get("userName");
 		this.databaseID = (int) userData.get("id");
 
 		if (userData.get("timezone") != null)
 			this.timeZoneStr = (String) userData.get("timezone");
 
-		// set priveleges:
+		// set privileges:
 		this.privileges = new ArrayList<Privilege>();
-
-		if(userData.get("priv_addStaff") != null && userData.get("priv_addStaff").equals('Y'))
+		if(userData.get("priv_addStaff") != null && userData.get("priv_addStaff").equals("Y"))
 		{
 			this.privileges.add(Privilege.ADD_STAFF);
 		}
-		if(userData.get("priv_addStaff") != null && userData.get("priv_removeStaff").equals("Y"))
+		
+		if(userData.get("priv_removeStaff") != null && userData.get("priv_removeStaff").equals("Y"))
 		{
 			this.privileges.add(Privilege.REMOVE_STAFF);
+		}
+		
+		if(userData.get("priv_shutdownBot") != null && userData.get("priv_shutdownBot").equals("Y"))
+		{
+			this.privileges.add(Privilege.SHUTDOWN_BOT);
 		}
 	}
 
 	// ------------------------------------------------------------------
 
-	// TODO remove this debug function
+	// TODO [DEBUG] remove this debug function
 	public void printStaffDataToConsole() {
 		String printOut = "";
 		printOut = printOut + "databaseID: " + this.databaseID + ", ";
@@ -61,7 +69,7 @@ public class StaffMember {
 
 		// Fansubbing description:
 		printOut = printOut + "priveledges: " + this.privileges + ", ";
-		// TODO print jobTitles
+		// TODO [Enhancement] print jobTitles
 
 		// Physicalities:
 		printOut = printOut + "timeZoneStr: " + this.timeZoneStr + ", ";
@@ -98,6 +106,20 @@ public class StaffMember {
 		return this.privileges.contains(required);
 	}
 
+	// ----------------------------------------------------------------------------
+	// Getters for private variables:
+	public int databaseID() {
+		return databaseID;
+	}
+
+	public String username() {
+		return username;
+	}
+	
+	public String getNonHLUsername() {
+		return StaffMember.deHighlightUsername(username);
+	}
+	
 	// ----------------------------------------------------------------------------
 	// Public Statics:
 	public static Boolean validateTimezone(String timeZoneID) {

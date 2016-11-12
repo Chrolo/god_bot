@@ -87,11 +87,11 @@ public class StaffMemberTest {
 	public void testValidateTimezone() {
 		Gson gson = new Gson();
 		String acceptedTimezones_Json = "['Europe/London', 'GMT']";
-		//TODO: iterate over JSON parsed array, asserting true for all values.
+		//TODO [Enchancement:test] iterate over JSON parsed array, asserting true for all values.
 		
 		
 		String unacceptableTimezones_Json = "['europe/london','gmt']";
-		//TODO: iterate over JSON parsed array, asserting false for all values.
+		//TODO [Enchancement:test] iterate over JSON parsed array, asserting false for all values.
 		
 	}
 

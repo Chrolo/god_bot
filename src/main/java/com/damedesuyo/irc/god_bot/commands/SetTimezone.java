@@ -20,8 +20,7 @@ public class SetTimezone implements BotCommand {
 
 	@Override
 	public void execute(MessageEvent event, String argString) {
-		//TODO : [Security] Make sure only identified users can set their timezones
-		System.out.print("[SetTimezone] was given argString:\t"+argString);
+		//TODO [Security] Make sure only identified users can set their timezones
 		String args[] = argString.split(" ");
 		String newtimeZone = args[0];
 		
@@ -42,7 +41,7 @@ public class SetTimezone implements BotCommand {
 			}
 			else
 			{
-				event.respondChannel("I don't have '"+StaffMember.deHighlightUsername(event.getUser().getNick())+"' listed in my database.");
+				event.respondChannel("I don't have anyone called '"+StaffMember.deHighlightUsername(event.getUser().getNick())+"' listed in my database.");
 			}
 		}
 	}
