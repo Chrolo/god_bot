@@ -140,9 +140,7 @@ public class Task {
 	}
 	
 	public boolean equals(Object obj)
-	{
-		System.out.println("Comparing:\n"+this+"\nto\n"+obj);
-		
+	{		
 		//Check it's the proper class:
 		if(!obj.getClass().isAssignableFrom(Task.class)){return false;}
 			
@@ -153,10 +151,7 @@ public class Task {
 		
 		boolean flag = true;
 		if(subTasks != null)
-		{
-			System.out.println("\tThis sub tasks: "+this.subTasks+"\n\tother.subTasks: "+otherTask.subTasks);
-			System.out.println("\tThis sub tasks.length: "+this.subTasks.length+"\n\tother.subTasks.length: "+otherTask.subTasks.length);
-			
+		{			
 			if(otherTask.subTasks == null)
 			{
 				return false;
@@ -169,7 +164,6 @@ public class Task {
 			
 			for(int i=0; i < subTasks.length; i++)
 			{
-				System.out.println("Subtask comparison: "+this.subTasks[i] +" compared to " + otherTask.subTasks[i]);
 				flag &= this.subTasks[i].equals(otherTask.subTasks[i]);
 			}
 		}
