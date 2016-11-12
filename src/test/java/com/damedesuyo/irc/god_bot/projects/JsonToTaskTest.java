@@ -4,8 +4,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.damedesuyo.irc.god_bot.projects_y.JsonToTask;
-import com.damedesuyo.irc.god_bot.projects_y.Task;
+import com.damedesuyo.irc.god_bot.projects.JsonToTask;
+import com.damedesuyo.irc.god_bot.projects.Task;
 
 public class JsonToTaskTest {
 

@@ -8,7 +8,7 @@ import java.util.TreeSet;
 
 import org.junit.Test;
 
-import com.damedesuyo.irc.god_bot.projects_y.Task;
+import com.damedesuyo.irc.god_bot.projects.Task;
 
 public class TaskTest {
 
