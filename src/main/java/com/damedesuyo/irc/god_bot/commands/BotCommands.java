@@ -16,7 +16,9 @@ public class BotCommands {
 		commands.put("setTimezone", SetTimezone.class);
 		commands.put("timefor", TimeFor.class);
 		commands.put("addUser", AddUser.class);
+		commands.put("addAlias", AddStaffAlias.class);
 		commands.put("removeUser", RemoveUser.class);
+		
 		commands.put("whoami?", EchoUserFacts.class);
 		commands.put("1337", CaptureChannelUserInfo.class);
 		commands.put("help", Help.class);

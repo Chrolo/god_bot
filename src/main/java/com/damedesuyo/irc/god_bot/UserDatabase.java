@@ -279,7 +279,7 @@ public class UserDatabase
 	
 	public int addStaffToDatabase(String userName, String timezone) throws SQLException
 	{
-		//TODO: validate the username before adding to DB.
+		//TODO [Enhancement] validate the username before adding to DB.
 		Map<String, Object> userData = new HashMap<String,Object>(5);
 		userData.put("userName", userName);
 		userData.put("timezone", timezone);
@@ -320,7 +320,7 @@ public class UserDatabase
 	
 	public boolean addNewAlias(String oldAlias, String newAlias)
 	{
-		//TODO: Update to use staffID tag
+		//TODO [Enhancement] make alternate method using StaffID field.
 		
 		//Check that the new name isn't already listed:
 		if( (isExistingUser(newAlias)) || (!isExistingUser(oldAlias)) )
@@ -421,7 +421,7 @@ public class UserDatabase
 		}
 		//get staffID:
 		StaffMember user_c = getStaffMember(user);
-		return p_deleteUser(user_c.databaseID);
+		return p_deleteUser(user_c.databaseID());
 	}
 	//-------------------------------------------------------------------------
 	// Insert Data : Private Method
@@ -488,9 +488,7 @@ public class UserDatabase
 	//-----------------------------------------------------------------------------
 	//Update UserInfo: Private methods
 	private boolean p_updateUserInfo(String user, String key, String value)
-	{
-		//TODO Change this to use staffID
-		
+	{		
 		//check user exists:
 		if(!isExistingUser(user))
 		{
@@ -564,7 +562,18 @@ public class UserDatabase
 			{
 				System.err.println("[UserDatabase.java:deleteUser] Tried to delete aliases for "+staffID+". Expected updateCount >0 , got "+ updates2);	
 			}
-			if(updates1<1||updates2<1)
+			
+			//And now any associated Alias listings:
+			preparedStatement = this.write_connection.connection.prepareStatement("DELETE FROM staffQualifications WHERE staffID=?;");
+			preparedStatement.setInt(1, staffID);
+			preparedStatement.executeUpdate();
+			int updates3 = preparedStatement.getUpdateCount();
+			if(updates3<1)
+			{
+				System.err.println("[UserDatabase.java:deleteUser] Tried to delete qualifications for "+staffID+". Expected updateCount >0 , got "+ updates3);	
+			}
+			
+			if( (updates1+updates2+updates3) < 1 )
 			{
 				return false;
 			}
@@ -573,6 +582,7 @@ public class UserDatabase
 			System.err.println("[UserDatabase.java:updateUserInfo] SQL Error: "+e.getMessage());
 			return false;
 		}
+		
 		return true;
 	}
 	
