@@ -1,4 +1,4 @@
-package com.damedesuyo.irc.god_bot.Projects;
+package com.damedesuyo.irc.god_bot.projects;
 
 import static org.junit.Assert.*;
 
@@ -8,7 +8,7 @@ import java.util.TreeSet;
 
 import org.junit.Test;
 
-import com.damedesuyo.irc.god_bot.Projects.Task;
+import com.damedesuyo.irc.god_bot.projects_y.Task;
 
 public class TaskTest {
 
@@ -85,9 +85,20 @@ public class TaskTest {
 	{
 		Task task1 = new Task(1);
 		Task task2 = new Task(2);
+		Task[] taskArray = { task1, task2 };
+		Task task3 = new Task(3);
+		Task task4 = new Task(4, taskArray);
+		Task[] taskArray2 = { task3, task4 };
+		Task taskAll = new Task(5, taskArray2);
 		
 		Task task1_again = new Task(1);
+		Task task2_again = new Task(2);
+		Task[] taskArray_again = { task1_again, task2_again };
+		Task[] taskArray_again2 = { task2_again, task1_again };
+		Task task4_again = new Task(4, taskArray_again);
+		Task task4_again_2 = new Task(4, taskArray_again2);
 		
+		Task task6 = new Task (4, taskArray2);
 		
 		assertTrue("Task should be equal to itself",task1.equals(task1));
 		assertFalse("Task isn't equal to any other class", task1.equals("string"));
@@ -98,7 +109,11 @@ public class TaskTest {
 		task1.setDone(true);
 		assertTrue("If both tasks are 'done' aswell, they should match. ("+task1+" vs "+task1_again+")",task1.equals(task1_again));
 		
-		fail("Not yet fully tested.\n'done' flags aren't checked.\nNested Tasks aren't checked.");
+		assertTrue("Both tasks are same and have same sub task. ("+task4+" vs "+task4_again+")", task4.equals(task4_again) );
+		
+		//assertTrue("Order of tasks shouldn't matter? ("+task4+" vs "+task4_again_2+")", task4.equals(task4_again_2) );	//I don't know whether to accept this? if subTasks are parallel then sure, but otherwise I guess not.
+		
+		assertFalse("Different subtasks mean the tasks aren't equal. ("+task4+" vs "+task6+")", task4.equals(task6));
 	}
 
 }

@@ -1,8 +1,11 @@
-package com.damedesuyo.irc.god_bot.Projects;
+package com.damedesuyo.irc.god_bot.projects;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+
+import com.damedesuyo.irc.god_bot.projects_y.JsonToTask;
+import com.damedesuyo.irc.god_bot.projects_y.Task;
 
 public class JsonToTaskTest {
 
