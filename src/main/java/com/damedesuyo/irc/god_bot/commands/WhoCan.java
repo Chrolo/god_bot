@@ -6,6 +6,7 @@ import org.pircbotx.hooks.events.MessageEvent;
 
 import com.damedesuyo.irc.god_bot.StaffMember;
 import com.damedesuyo.irc.god_bot.UserDatabase;
+import com.damedesuyo.irc.god_bot.dictionary.AppDictionary;
 
 public class WhoCan implements BotCommand {
 
@@ -24,12 +25,14 @@ public class WhoCan implements BotCommand {
 		String args[] = argString.split(" ");
 		if(args[0] != "")
 		{
-			System.out.println("[WhoCan] Searching for: "+args[0]);
-			ArrayList<StaffMember> staff = UserDatabase.getSharedInstance().getMembersQualifiedFor(args[0]);
+			String qualification = AppDictionary.getSharedInstance().getSubstitutionAgainstContext(args[0], "Qualifications");
+			System.out.println("[WhoCan] Searching for: "+qualification+" (originally given: "+args[0]+")");
+			
+			ArrayList<StaffMember> staff = UserDatabase.getSharedInstance().getMembersQualifiedFor(qualification);
 			
 			if(staff == null)	//TODO: remove this once i've done entry validation.
 			{
-				event.respondChannel("Oops, something went wrong ;_;");
+				event.respondChannel("Oops, something went wrong ;_; Maybe try another word for the qualification?");
 				return;
 			}
 			

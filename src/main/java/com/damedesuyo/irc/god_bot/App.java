@@ -23,6 +23,7 @@ import com.damedesuyo.irc.god_bot.commands.BotCommand;
 import com.damedesuyo.irc.god_bot.commands.BotCommandNotFound;
 import com.damedesuyo.irc.god_bot.commands.BotCommands;
 import com.damedesuyo.irc.god_bot.database_def.DatabaseDefinition;
+import com.damedesuyo.irc.god_bot.dictionary.AppDictionary;
 import com.google.common.collect.ImmutableSortedSet;
 import com.google.gson.Gson;
 
@@ -170,8 +171,14 @@ public class App  extends ListenerAdapter
 		DatabaseDefinition dbDef = new DatabaseDefinition();
 		Reader dbDefFile = new FileReader("config/databaseDefinitions.json");
 		dbDef = gson.fromJson(dbDefFile, dbDef.getClass());
-//		System.out.println("After Reading JSON, dbTableDef is: "+dbDef);
-//		System.out.println("After Reading JSON, dbTableDef.tables[staff] is: "+dbDef.tables.get("staff"));
+		
+		
+		/*
+		AppDictionary test = AppDictionary.getSharedInstance();
+		System.out.println("Dictionary is: "+test);
+		System.out.println("global dictionary is: "+test.globalDictionary);
+		System.out.println("TS => "+test.getSubstitutionFromAllDictionaries("TS"));
+		//*/
 		
 		//Configure what we want our bot to do
 		Configuration configuration = new Configuration.Builder()
@@ -184,8 +191,7 @@ public class App  extends ListenerAdapter
 				
 				.addListener(new App())
 				.buildConfiguration();
-
-
+		
 		//--------------------------------------------------------
 		//Running stuff:
 
