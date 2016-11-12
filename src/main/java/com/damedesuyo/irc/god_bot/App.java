@@ -173,7 +173,7 @@ public class App  extends ListenerAdapter
 		dbDef = gson.fromJson(dbDefFile, dbDef.getClass());
 		
 		
-		//*
+		/*
 		AppDictionary test = AppDictionary.getSharedInstance();
 		System.out.println("Dictionary is: "+test);
 		System.out.println("global dictionary is: "+test.globalDictionary);
@@ -191,12 +191,11 @@ public class App  extends ListenerAdapter
 				
 				.addListener(new App())
 				.buildConfiguration();
-
-
+		
 		//--------------------------------------------------------
 		//Running stuff:
 
-		/*
+		//*
          //Create our bot with the configuration
          bot = new PircBotX(configuration);
          //Connect to the server
