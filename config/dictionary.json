@@ -1,0 +1,14 @@
+{
+	"Qualifications":{
+		"dictionary":{
+			"TS": "typesetter",
+			"KFX": "kfxer",
+			"ENC": "encoder",
+			"QC": "qualityChecker",
+			"PL": "projectLeader",
+			"TL": "translator",
+			"time": "timer",
+			"typeset": "typesetter"
+		}
+	}
+}
