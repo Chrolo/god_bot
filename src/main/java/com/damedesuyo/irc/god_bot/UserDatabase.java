@@ -287,6 +287,44 @@ public class UserDatabase
 		return this.addStaffToDatabase(userData);
 	}
 	
+	public boolean addQualificationToStaffMemeber(int staffId, String qualification)
+	{
+		//Check the column name is valid:
+		if(!this.StaffQualificationTableStructure.columns.containsKey(qualification))
+		{
+			System.err.println("[UserDatabase] '"+qualification+"' is not a valid collumn in staffQualifications");
+			return false;
+		}
+		
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = this.write_connection.connection.prepareStatement("INSERT INTO staffQualifications (staffID, "+qualification+" ) ( ?, 'Y');");
+			preparedStatement.setInt(1, staffId);
+			preparedStatement.executeUpdate();
+			int updates = preparedStatement.getUpdateCount();
+			if( updates != 1)
+				return false;
+			else
+				return true;
+			
+		} catch (SQLException e) {
+			System.err.println("[UserDatabase:addQualificationToStaffMemeber] SQL Error occurred adding "+qualification+" to staffID "+staffId+". "+e.getMessage());
+			return false;
+		}
+	}
+	
+	public boolean addQualificationToStaffMemeber(String staff, String qualification)
+	{
+		//Check staffname is valid:
+		if(!this.isExistingUser(staff))
+		{
+			System.err.println("[UserDatabase] '"+staff+"' isn't listed on the database.");
+			return false;
+		}
+		
+		
+		return this.addQualificationToStaffMemeber(this.getStaffMember(staff).databaseID(), qualification);
+	}
 	
 	
 	

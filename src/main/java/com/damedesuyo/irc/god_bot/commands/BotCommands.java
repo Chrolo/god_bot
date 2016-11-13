@@ -18,6 +18,7 @@ public class BotCommands {
 		commands.put("addUser", AddUser.class);
 		commands.put("addAlias", AddStaffAlias.class);
 		commands.put("removeUser", RemoveUser.class);
+		commands.put("qualifyStaff", AddStaffQualification.class);
 		
 		commands.put("whoami?", EchoUserFacts.class);
 		commands.put("1337", CaptureChannelUserInfo.class);

@@ -12,7 +12,8 @@
 
 				"priv_addStaff"		:{ "desc_s": "Priveledge: Add Staff",	"desc": "Can add staff", 	"type": "ENUM('N','Y')",	"extra" : "DEFAULT 'N' "},
 				"priv_removeStaff"	:{ "desc_s": "Priveledge: Remove Staff",	"desc": "Can remove staff",	"type": "ENUM('N','Y')",	"extra" : "DEFAULT 'N' "},
-				"priv_shutdownBot"	:{ "desc_s": "Priveledge: Shutdown the Bot",	"desc": "Can Shutdown the Bot",	"type": "ENUM('N','Y')",	"extra" : "DEFAULT 'N' "}
+				"priv_shutdownBot"	:{ "desc_s": "Priveledge: Shutdown the Bot",	"desc": "Can Shutdown the Bot",	"type": "ENUM('N','Y')",	"extra" : "DEFAULT 'N' "},
+				"priv_addQualfication"	:{ "desc_s": "Priveledge: Add Qualifications",	"desc": "Can add new qualifications to other staff.",	"type": "ENUM('N','Y')",	"extra" : "DEFAULT 'N' "}
 
 			}
 		},

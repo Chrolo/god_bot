@@ -54,6 +54,11 @@ public class StaffMember {
 		{
 			this.privileges.add(Privilege.SHUTDOWN_BOT);
 		}
+		
+		if(userData.get("priv_addQualfication") != null && userData.get("priv_addQualfication").equals("Y"))
+		{
+			this.privileges.add(Privilege.ADD_QUALIFICATION);
+		}
 	}
 
 	// ------------------------------------------------------------------
