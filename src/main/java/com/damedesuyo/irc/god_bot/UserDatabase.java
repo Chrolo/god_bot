@@ -298,7 +298,13 @@ public class UserDatabase
 		
 		PreparedStatement preparedStatement;
 		try {
-			preparedStatement = this.write_connection.connection.prepareStatement("INSERT INTO staffQualifications (staffID, "+qualification+" ) ( ?, 'Y');");
+			if(p_checkIfIDPresentInTable(staffId, "staffQualifications","staffID"))
+				preparedStatement = this.write_connection.connection.prepareStatement("UPDATE staffQualifications SET "+qualification+"= 'Y' WHERE staffID = ?;");
+			else
+			{
+				System.out.println("[UserDatabase:addQualificationToStaffMemeber] staff:"+staffId+" didn't already have an entry.");
+				preparedStatement = this.write_connection.connection.prepareStatement("INSERT INTO staffQualifications (staffID, "+qualification+" ) VALUES ( ?, 'Y');");
+			}
 			preparedStatement.setInt(1, staffId);
 			preparedStatement.executeUpdate();
 			int updates = preparedStatement.getUpdateCount();
@@ -322,10 +328,74 @@ public class UserDatabase
 			return false;
 		}
 		
-		
 		return this.addQualificationToStaffMemeber(this.getStaffMember(staff).databaseID(), qualification);
 	}
 	
+	
+	public boolean removeQualificationFromStaffMember(int staffId, String qualification)
+	{
+		//Check the column name is valid:
+		if(!this.StaffQualificationTableStructure.columns.containsKey(qualification))
+		{
+			System.err.println("[UserDatabase] '"+qualification+"' is not a valid collumn in staffQualifications");
+			return false;
+		}
+		
+		PreparedStatement preparedStatement;
+		try {
+			if(p_checkIfIDPresentInTable(staffId, "staffQualifications","staffID"))
+				preparedStatement = this.write_connection.connection.prepareStatement("UPDATE staffQualifications SET "+qualification+"= 'N' WHERE staffID = ?;");
+			else
+			{
+				System.out.println("[UserDatabase:removeQualificationFromStaffMember] staff:"+staffId+" didn't already have an entry.");
+				preparedStatement = this.write_connection.connection.prepareStatement("INSERT INTO staffQualifications (staffID, "+qualification+" ) VALUES ( ?, 'N');");
+			}
+			
+			preparedStatement.setInt(1, staffId);
+			preparedStatement.executeUpdate();
+			int updates = preparedStatement.getUpdateCount();
+			if( updates != 1)
+				return false;
+			else
+				return true;
+			
+		} catch (SQLException e) {
+			System.err.println("[UserDatabase:addQualificationToStaffMemeber] SQL Error occurred adding "+qualification+" to staffID "+staffId+". "+e.getMessage());
+			return false;
+		}
+	}
+	
+	public boolean removeQualificationFromStaffMember(String staff, String qualification)
+	{
+		//Check staffname is valid:
+		if(!this.isExistingUser(staff))
+		{
+			System.err.println("[UserDatabase] '"+staff+"' isn't listed on the database.");
+			return false;
+		}
+		
+		
+		return this.removeQualificationFromStaffMember(this.getStaffMember(staff).databaseID(), qualification);
+	}
+	
+	private boolean p_checkIfIDPresentInTable(int id, String table, String column)
+	{
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = this.read_connection.connection.prepareStatement("SELECT count(*) FROM "+table+" WHERE "+column+" = ?;");
+			preparedStatement.setInt(1, id);
+			ResultSet res = preparedStatement.executeQuery();
+			res.next();
+			if( res.getInt(1) < 1)
+				return false;
+			else
+				return true;
+		} catch (SQLException e) {
+			System.err.println("[UserDatabase:p_checkIfIDPresentInTable] SQL Error occurred whilst checking for  "+id+" in "+table+":"+column+". "+e.getMessage());
+			return false;
+		}
+		
+	}
 	
 	
 	//Add new username to database:
@@ -440,7 +510,6 @@ public class UserDatabase
 		
 		for(Map<String,Object> row : results)
 		{
-			System.out.println("[UserDatabase:getQualifications] row was: "+row);
 			returnArray.add(this.getStaffMember((int)row.get("staffID")));
 		}
 				
