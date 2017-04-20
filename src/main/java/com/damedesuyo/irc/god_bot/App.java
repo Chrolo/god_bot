@@ -66,6 +66,7 @@ public class App  extends ListenerAdapter
 				}
 				catch(Exception e)
 				{
+					event.respondChannel("something went wrong ;_;");
 					System.out.println("Command '"+command+"' failed with uncaught exception:");
 					e.printStackTrace();
 				}
@@ -100,12 +101,8 @@ public class App  extends ListenerAdapter
 		{
 			//select random user in channel:
 			ImmutableSortedSet<String> users = event.getChannel().getUsersNicks();
-			System.out.println(users.toString());
-			System.out.println("Users.aslist().get(0) is :"+users.asList().get(0));
-			System.out.println("List was "+users.asList().size()+" in size");
 			Random dice = new Random();
 			int rand = dice.nextInt(users.asList().size());
-			System.out.println("Random dice rolled:"+rand);
 			String user = users.asList().get(rand);
 			event.respondChannel(StaffMember.deHighlightUsername(user)+" is 05F04A07B08U03L02O06U13S");
 		}

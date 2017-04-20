@@ -26,7 +26,8 @@ public class Help implements BotCommand {
 		{
 			try {
 				BotCommand temp = commandLib.getCommandClassInstance(command);
-				event.respondChannel(command+":\t\t"+temp.getShortHelp());
+				event.respondChannel("I'm going to PM you my commands");
+				event.respondPrivateMessage(command+":\t\t"+temp.getShortHelp());
 			} catch (BotCommandNotFound e) {
 				System.err.println("[Help Command] Somehow a command found from the list somehow didn't exist...\n"+e.getMessage());
 			}

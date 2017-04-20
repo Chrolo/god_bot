@@ -39,7 +39,6 @@ public class AddUser implements BotCommand{
 			UserDatabase userDatabase = UserDatabase.getSharedInstance();
 			
 			//Get the new user's info:
-			
 			Map<String,Object> info = new HashMap<String,Object>();
 			String args[] = argString.split(" ");
 			
